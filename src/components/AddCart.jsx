@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -10,98 +10,117 @@ import {
   Input,
 } from "reactstrap";
 
-function AddCart({ newCard }) {
-  const [modal, setModal] = useState(false);
-  const toggle = () => setModal(!modal);
+function AddCart({ isOpen, toggle, onSave, initialData = null }) {
+  const isUpdate = initialData !== null;
 
   const [form, setForm] = useState({
     name: "",
     price: "",
     sale: "",
     quantity: "",
-    img: "./src/assets/foto.jpg"
+    img: "./src/assets/foto.jpg",
   });
+
+  useEffect(() => {
+    if (isUpdate && initialData) {
+      setForm(initialData);
+    } else {
+      setForm({
+        name: "",
+        price: "",
+        sale: "",
+        quantity: "",
+        img: "./src/assets/foto.jpg",
+      });
+    }
+  }, [initialData, isUpdate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleAdd = () => {
-    const newItem = {
-      id: Date.now(),
+  const handleSubmit = () => {
+    const finalItem = {
       ...form,
+      id: isUpdate ? form.id : Date.now(),
       price: +form.price,
       sale: +form.sale,
       quantity: +form.quantity,
     };
 
-    newCard(newItem);
+    onSave(finalItem);
     toggle();
 
-    setForm({
-      name: "",
-      price: "",
-      sale: "",
-      quantity: "",
-      img: "",
-    });
+    if (!isUpdate) {
+      setForm({
+        name: "",
+        price: "",
+        sale: "",
+        quantity: "",
+        img: "./src/assets/foto.jpg",
+      });
+    }
   };
 
   return (
-    <div>
-      <Button color="danger" onClick={toggle}>
-        Yangi mahsulot qo'shish
-      </Button>
-      <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Mahsulot qoshish</ModalHeader>
-        <ModalBody>
-          <FormGroup>
-
-            <Label for="name">Nomi</Label>
-            <Input name="name" value={form.name} required onChange={handleChange} />
-            
-          </FormGroup>
-          <FormGroup>
-            <Label for="price">Narxi</Label>
-            <Input
-              name="price"
-              type="number"
-              required
-              value={form.price}
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="sale">Sale</Label>
-            <Input
-              name="sale"
-              type="number"
-              required
-              value={form.sale}
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="quantity">Soni</Label>
-            <Input
-              name="quantity"
-              type="number"
-              required
-              value={form.quantity}
-              onChange={handleChange}
-            />
-          </FormGroup>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="info" onClick={handleAdd}>
-            Mahsulotni qoshish
-          </Button>
-          <Button color="second" onClick={toggle}>
-            Bekor qilish
-          </Button>
-        </ModalFooter>
-      </Modal>
-    </div>
+    <Modal isOpen={isOpen} toggle={toggle}>
+      <ModalHeader toggle={toggle}>
+        {isUpdate ? "Update Product" : "Yangi mahsulot qoshish"}
+      </ModalHeader>
+      <ModalBody>
+        <FormGroup>
+          <Label>Nomi</Label>
+          <Input
+            name="name"
+            value={form.name}
+            required
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Narxi</Label>
+          <Input
+            name="price"
+            type="number"
+            required
+            value={form.price}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Chegirma (%)</Label>
+          <Input
+            name="sale"
+            type="number"
+            required
+            value={form.sale}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Soni</Label>
+          <Input
+            name="quantity"
+            type="number"
+            required
+            value={form.quantity}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Rasm URL</Label>
+          <Input name="img" value={form.img} onChange={handleChange} />
+        </FormGroup>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="primary" onClick={handleSubmit}>
+          {isUpdate ? "Saqlash" : "Qoshish"}
+        </Button>
+        <Button color="secondary" onClick={toggle}>
+          Bekor qilish
+        </Button>
+      </ModalFooter>
+    </Modal>
   );
 }
 

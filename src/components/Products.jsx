@@ -1,32 +1,11 @@
 import React, { useState } from "react";
 import Cart from "./Cart";
 import AddCart from "./AddCart";
-import UpdateCart from "./UpdateCart";
 
 const Products = () => {
   const [search, setSearch] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
-
-  const openEditModal = (item) => {
-  setEditItem(item);
-};
-
-const closeEditModal = () => {
-  setEditItem(null);
-};
-
-  const updateProduct = (updatedItem) => {
-    setProduct(
-      product.map((item) => (item.id === updatedItem.id ? updatedItem : item))
-    );
-  };
-
-  const deleteProduct = (id) => {
-    setProduct(product.filter((item) => item.id !== id));
-  };
-  const addNewProduct = (newItem) => {
-    setProduct([...product, newItem]);
-  };
   const [product, setProduct] = useState([
     {
       id: 1,
@@ -70,11 +49,40 @@ const closeEditModal = () => {
     },
   ]);
 
+  const openAddModal = () => {
+    setEditItem(null);
+    setModalOpen(true);
+  };
+
+  const openEditModal = (item) => {
+    setEditItem(item);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setEditItem(null);
+    setModalOpen(false);
+  };
+
+  const handleSave = (item) => {
+    if (editItem) {
+      setProduct(product.map((p) => (p.id === item.id ? item : p)));
+    } else {
+      setProduct([...product, item]);
+    }
+  };
+
+  const deleteProduct = (id) => {
+    setProduct(product.filter((item) => item.id !== id));
+  };
+
   return (
     <div className="container">
       <div className="row my-3">
         <div className="col-md-2">
-          <AddCart newCard={addNewProduct} />
+          <button className="btn btn-danger" onClick={openAddModal}>
+            Yangi mahsulot qoshish
+          </button>
         </div>
         <div className="col-md-6">
           <input
@@ -85,22 +93,15 @@ const closeEditModal = () => {
           />
         </div>
       </div>
+
       <div className="row mt-3">
-        {product.filter((item) => {
-          if (search.length === 0) {
-            return item;
-          } else if (item.name.includes(search)) {
-            return item;
-          }
-        }).length > 0 ? (
+        {product.filter((item) =>
+          item.name.toLowerCase().includes(search.toLowerCase())
+        ).length > 0 ? (
           product
-            .filter((item) => {
-              if (search.length === 0) {
-                return item;
-              } else if (item.name.includes(search)) {
-                return item;
-              }
-            })
+            .filter((item) =>
+              item.name.toLowerCase().includes(search.toLowerCase())
+            )
             .map((item) => (
               <div className="col-md-4" key={item.id}>
                 <Cart
@@ -114,11 +115,13 @@ const closeEditModal = () => {
           <h1>Not Found</h1>
         )}
       </div>
-      {editItem && (
-        <UpdateCart
-          item={editItem}
-          onSave={updateProduct}
-          onClose={closeEditModal}
+
+      {modalOpen && (
+        <AddCart
+          isOpen={modalOpen}
+          toggle={closeModal}
+          onSave={handleSave}
+          initialData={editItem}
         />
       )}
     </div>

@@ -32,15 +32,30 @@ const UpdateCart = ({ item, onSave, onClose }) => {
         </FormGroup>
         <FormGroup>
           <Label>Price</Label>
-          <Input name="price" type="number" value={form.price} onChange={handleChange} />
+          <Input
+            name="price"
+            type="number"
+            value={form.price}
+            onChange={handleChange}
+          />
         </FormGroup>
         <FormGroup>
           <Label>Sale</Label>
-          <Input name="sale" type="number" value={form.sale} onChange={handleChange} />
+          <Input
+            name="sale"
+            type="number"
+            value={form.sale}
+            onChange={handleChange}
+          />
         </FormGroup>
         <FormGroup>
           <Label>Quantity</Label>
-          <Input name="quantity" type="number" value={form.quantity} onChange={handleChange} />
+          <Input
+            name="quantity"
+            type="number"
+            value={form.quantity}
+            onChange={handleChange}
+          />
         </FormGroup>
         <FormGroup>
           <Label>Image URL</Label>

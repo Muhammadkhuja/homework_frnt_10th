@@ -5,7 +5,7 @@ import Post from './components/Post'
 function App() {
   return (
     <>
-    <User />
+    {/* <User /> */}
     <Post />
     < Products />
     </>
