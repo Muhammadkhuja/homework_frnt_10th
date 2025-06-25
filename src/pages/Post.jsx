@@ -25,7 +25,7 @@ const Post = () => {
 
   const handleLimitChange = (e) => {
     const value = parseInt(e.target.value);
-    if (!isNaN(value) && value > 0 || value < 50) {
+    if ((!isNaN(value) && value > 0) || value < 50) {
       setLimit(value);
       setPage(1);
     }

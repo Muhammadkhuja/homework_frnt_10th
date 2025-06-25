@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Cart from "./Cart";
+import Cart from "../components/Cart";
 import AddCart from "./AddCart";
 
 const Products = () => {
