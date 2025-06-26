@@ -22,9 +22,11 @@ const User = () => {
     setPage((prev) => prev - 1);
   };
 
-  const moveSingleUser = (id)=>{
-    navigate(`/users/${id}`);
-  }
+    const moveSingleUser = (id) => {
+    const basePath = location.pathname.replace(/\/+$/, ""); 
+    navigate(`${basePath}/${id}`);
+  };
+
   return (
     <div className="container">
       <div className="row mt-2">
@@ -38,7 +40,6 @@ const User = () => {
               <th>phone</th>
               <th>website</th>
               <th>company.name</th>
-              {/* <td>Actions</td> */}
             </tr>
           </thead>
           <tbody>
@@ -52,9 +53,6 @@ const User = () => {
                   <td>{item.phone}</td>
                   <td>{item.website}</td>
                   <td>{item.company.name}</td>
-                  {/* <Link to={`/users/${item.id}`} className="btn btn-info">
-                    visit
-                  </Link> */}
                 </tr>
               );
             })}
